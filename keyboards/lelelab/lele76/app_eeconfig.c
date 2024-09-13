@@ -17,6 +17,7 @@ bool app_eeconfig_load(void) {
         *buf = eeprom_read_byte((uint8_t*) (i + APP_EECONFIG_ADDR_START));
         buf++;
     }
+    app_eeconfig_side_effects_run();
     return true;
 }
 

@@ -2,9 +2,26 @@
 #include "screen_app.h"
 #include "via_protocol.h"
 #include "app_eeconfig.h"
+#include "timeout.h"
 
 void eeconfig_init_kb(void) {  // EEPROM is getting reset!
     app_eeconfig_init();
+}
+
+void keyboard_post_init_kb(void) {
+    app_eeconfig_load();
+}
+
+void housekeeping_task_kb(void) {
+    timeout_task();
+}
+
+void post_process_record_kb(uint16_t keycode, keyrecord_t *record) {
+    refresh_timeout();
+}
+
+void post_encoder_update_kb(uint8_t index, bool clockwise) {
+    refresh_timeout();
 }
 
 #ifdef OLED_ENABLE
@@ -21,7 +38,7 @@ oled_rotation_t oled_init_kb(oled_rotation_t rotation) {
 #endif
 
 #ifdef VIA_ENABLE
-void backlight_custom_set_value(uint8_t *data) {
+static void backlight_custom_set_value(uint8_t *data) {
     // data = [ value_id, value_data ]
     uint8_t *value_id   = &(data[0]);
     uint8_t *value_data = &(data[1]);
@@ -55,7 +72,7 @@ void backlight_custom_set_value(uint8_t *data) {
 }
 
 
-void backlight_custom_get_value(uint8_t *data) {
+static void backlight_custom_get_value(uint8_t *data) {
     // data = [ value_id, value_data ]
     uint8_t *value_id   = &(data[0]);
     uint8_t *value_data = &(data[1]);
@@ -88,7 +105,7 @@ void backlight_custom_get_value(uint8_t *data) {
     }
 }
 
-void backlight_custom_value_command_kb(uint8_t *data, uint8_t length) {
+void via_custom_value_command_kb(uint8_t *data, uint8_t length) {
     // data = [ command_id, channel_id, value_id, value_data ]
     uint8_t *command_id        = &(data[0]);
     uint8_t *channel_id        = &(data[1]);
