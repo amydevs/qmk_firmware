@@ -39,8 +39,16 @@ void via_custom_set_value(uint8_t *data) {
             eecfg.rgb.speed = *value_data;
             break;
         }
-        case id_backlight_color: {
-            // eecfg.rgb.hue = *value_data;
+        case id_backlight_hue: {
+            eecfg.rgb.hue = *value_data;
+            break;
+        }
+        case id_backlight_hue2: {
+            eecfg.rgb.hue2 = *value_data;
+            break;
+        }
+        case id_backlight_saturation: {
+            eecfg.rgb.satu = *value_data;
             break;
         }
     }
@@ -65,8 +73,16 @@ void via_custom_get_value(uint8_t *data) {
             *value_data = eecfg.rgb.speed;
             break;
         }
-        case id_backlight_color: {
-            // eecfg.rgb.hue = *value_data;
+        case id_backlight_hue: {
+            *value_data = eecfg.rgb.hue;
+            break;
+        }
+        case id_backlight_hue2: {
+            *value_data = eecfg.rgb.hue2;
+            break;
+        }
+        case id_backlight_saturation: {
+            *value_data = eecfg.rgb.satu;
             break;
         }
     }
