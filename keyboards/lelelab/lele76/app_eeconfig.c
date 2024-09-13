@@ -2,6 +2,7 @@
 #include "tiny_mcu.h"
 #include "tiny_mcu_protocol.h"
 #include "app_eeconfig.h"
+#include "timeout.h"
 
 app_eeconfig_t eecfg;
 static uint8_t side_effect_run_progress = 0;
@@ -59,7 +60,7 @@ void app_eeconfig_task(void) {
         }
         case 2:
         {
-            tiny85_i2c_tx_2b(CMD_RGB_eff, eecfg.rgb.mode);
+            if (!is_led_timeout) tiny85_i2c_tx_2b(CMD_RGB_eff, eecfg.rgb.mode);
             break;
         }
         case 3:
@@ -89,9 +90,11 @@ void app_eeconfig_task(void) {
         }
         case 8:
         {
-            if (eecfg.side.mode <= SideLed_Mode_solid) {
-                const uint8_t side_effect_data[] = {CMD_SIDE_LED_EFFECT, eecfg.side.mode};
-                tiny85_i2c_tx(side_effect_data, sizeof(side_effect_data));
+            if (!is_side_led_timeout) {
+                if (eecfg.side.mode <= SideLed_Mode_solid) {
+                    const uint8_t side_effect_data[] = {CMD_SIDE_LED_EFFECT, eecfg.side.mode};
+                    tiny85_i2c_tx(side_effect_data, sizeof(side_effect_data));
+                }
             }
             break;
         }

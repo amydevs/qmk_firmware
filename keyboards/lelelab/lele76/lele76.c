@@ -15,11 +15,11 @@ void keyboard_post_init_kb(void) {
 void housekeeping_task_kb(void) {
     tinyrgb_task();
     app_eeconfig_task();
-    // timeout_task();
+    timeout_task();
 }
 
 void post_process_record_kb(uint16_t keycode, keyrecord_t *record) {
-    refresh_timeout();
+  if (record->event.pressed) refresh_timeout();
 }
 
 void post_encoder_update_kb(uint8_t index, bool clockwise) {
