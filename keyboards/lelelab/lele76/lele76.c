@@ -83,30 +83,32 @@ static void backlight_custom_get_value(uint8_t *data) {
 
     switch (*value_id) {
         case id_backlight_brightness: {
-            *value_data = eecfg.rgb.bright;
+            value_data[0] = eecfg.rgb.bright;
             break;
         }
         case id_backlight_effect: {
-            *value_data = eecfg.rgb.mode;
+            value_data[0] = eecfg.rgb.mode;
             break;
         }
         case id_backlight_effect_speed: {
-            *value_data = eecfg.rgb.speed;
+            value_data[0] = eecfg.rgb.speed;
             break;
         }
         case id_backlight_hue: {
-            *value_data = eecfg.rgb.hue;
+            value_data[0] = eecfg.rgb.hue;
             break;
-        }
+        }klkl
         case id_backlight_hue2: {
-            *value_data = eecfg.rgb.hue2;
+            value_data[0] = eecfg.rgb.hue2;
             break;
         }
         case id_backlight_saturation: {
-            *value_data = eecfg.rgb.satu;
+            value_data[0] = eecfg.rgb.satu;
             break;
         }
     }
+
+    app_eeconfig_side_effects_run();
 }
 
 void via_custom_value_command_kb(uint8_t *data, uint8_t length) {
