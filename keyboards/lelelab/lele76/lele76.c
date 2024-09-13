@@ -89,6 +89,16 @@ static void backlight_custom_set_value(uint8_t *data) {
             eecfg.side.autooff = *value_data;
             break;
         }
+        case id_oled_brightness: {
+            eecfg.oled.bright = *value_data;
+        }
+        case id_oled_invert: {
+            eecfg.oled.invert = *value_data;
+        }
+        case id_oled_timeout: {
+            eecfg.oled.autooff = *value_data;
+            break;
+        }
     }
 
     app_eeconfig_save();
@@ -143,6 +153,16 @@ static void backlight_custom_get_value(uint8_t *data) {
         }
         case id_underglow_timeout: {
             value_data[0] = eecfg.side.autooff;
+            break;
+        }
+        case id_oled_brightness: {
+            value_data[0] = eecfg.oled.bright;
+        }
+        case id_oled_invert: {
+            value_data[0] = eecfg.oled.invert;
+        }
+        case id_oled_timeout: {
+            value_data[0] = eecfg.oled.autooff;
             break;
         }
     }

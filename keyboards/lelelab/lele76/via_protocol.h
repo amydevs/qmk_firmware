@@ -12,4 +12,7 @@ typedef enum {
     id_underglow_effect_speed = 13,
     id_underglow_timeout      = 19,
     // display
+    id_oled_brightness        = 21,
+    id_oled_invert            = 22,
+    id_oled_timeout           = 29,
 } via_backlight_value;
