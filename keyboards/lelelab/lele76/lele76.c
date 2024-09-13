@@ -73,6 +73,9 @@ static void backlight_custom_set_value(uint8_t *data) {
             break;
         }
     }
+
+    app_eeconfig_save();
+    app_eeconfig_side_effects_run();
 }
 
 
@@ -97,7 +100,7 @@ static void backlight_custom_get_value(uint8_t *data) {
         case id_backlight_hue: {
             value_data[0] = eecfg.rgb.hue;
             break;
-        }klkl
+        }
         case id_backlight_hue2: {
             value_data[0] = eecfg.rgb.hue2;
             break;
@@ -107,8 +110,6 @@ static void backlight_custom_get_value(uint8_t *data) {
             break;
         }
     }
-
-    app_eeconfig_side_effects_run();
 }
 
 void via_custom_value_command_kb(uint8_t *data, uint8_t length) {
@@ -128,7 +129,7 @@ void via_custom_value_command_kb(uint8_t *data, uint8_t length) {
                 break;
             }
             case id_custom_save: {
-                app_eeconfig_save();
+                // unused
                 break;
             }
             default: {
