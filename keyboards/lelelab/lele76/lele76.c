@@ -70,6 +70,10 @@ static void backlight_custom_set_value(uint8_t *data) {
             eecfg.rgb.satu = *value_data;
             break;
         }
+        case id_backlight_timeout: {
+            eecfg.rgb.autooff = *value_data;
+            break;
+        }
         case id_underglow_brightness: {
             eecfg.side.bright = *value_data;
         }
@@ -79,6 +83,10 @@ static void backlight_custom_set_value(uint8_t *data) {
         }
         case id_underglow_effect_speed: {
             eecfg.side.speed = *value_data;
+            break;
+        }
+        case id_underglow_timeout: {
+            eecfg.side.autooff = *value_data;
             break;
         }
     }
@@ -118,6 +126,10 @@ static void backlight_custom_get_value(uint8_t *data) {
             value_data[0] = eecfg.rgb.satu;
             break;
         }
+        case id_backlight_timeout: {
+            value_data[0] = eecfg.rgb.autooff;
+            break;
+        }
         case id_underglow_brightness: {
             value_data[0] = eecfg.side.bright;
         }
@@ -127,6 +139,10 @@ static void backlight_custom_get_value(uint8_t *data) {
         }
         case id_underglow_effect_speed: {
             value_data[0] = eecfg.side.speed;
+            break;
+        }
+        case id_underglow_timeout: {
+            value_data[0] = eecfg.side.autooff;
             break;
         }
     }
