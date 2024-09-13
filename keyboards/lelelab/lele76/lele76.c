@@ -70,6 +70,17 @@ static void backlight_custom_set_value(uint8_t *data) {
             eecfg.rgb.satu = *value_data;
             break;
         }
+        case id_underglow_brightness: {
+            eecfg.side.bright = *value_data;
+        }
+        case id_underglow_effect: {
+            eecfg.side.mode = *value_data;
+            break;
+        }
+        case id_underglow_effect_speed: {
+            eecfg.side.speed = *value_data;
+            break;
+        }
     }
 
     app_eeconfig_save();
@@ -105,6 +116,17 @@ static void backlight_custom_get_value(uint8_t *data) {
         }
         case id_backlight_saturation: {
             value_data[0] = eecfg.rgb.satu;
+            break;
+        }
+        case id_underglow_brightness: {
+            value_data[0] = eecfg.side.bright;
+        }
+        case id_underglow_effect: {
+            value_data[0] = eecfg.side.mode;
+            break;
+        }
+        case id_underglow_effect_speed: {
+            value_data[0] = eecfg.side.speed;
             break;
         }
     }
