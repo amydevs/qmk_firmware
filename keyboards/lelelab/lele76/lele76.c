@@ -21,7 +21,7 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 #endif
 
 #ifdef VIA_ENABLE
-void via_custom_set_value(uint8_t *data) {
+void backlight_custom_set_value(uint8_t *data) {
     // data = [ value_id, value_data ]
     uint8_t *value_id   = &(data[0]);
     uint8_t *value_data = &(data[1]);
@@ -55,7 +55,7 @@ void via_custom_set_value(uint8_t *data) {
 }
 
 
-void via_custom_get_value(uint8_t *data) {
+void backlight_custom_get_value(uint8_t *data) {
     // data = [ value_id, value_data ]
     uint8_t *value_id   = &(data[0]);
     uint8_t *value_data = &(data[1]);
@@ -88,7 +88,7 @@ void via_custom_get_value(uint8_t *data) {
     }
 }
 
-void via_custom_value_command_kb(uint8_t *data, uint8_t length) {
+void backlight_custom_value_command_kb(uint8_t *data, uint8_t length) {
     // data = [ command_id, channel_id, value_id, value_data ]
     uint8_t *command_id        = &(data[0]);
     uint8_t *channel_id        = &(data[1]);
@@ -97,11 +97,11 @@ void via_custom_value_command_kb(uint8_t *data, uint8_t length) {
     if (*channel_id == id_custom_channel) {
         switch (*command_id) {
             case id_custom_set_value: {
-                via_custom_set_value(value_id_and_data);
+                backlight_custom_set_value(value_id_and_data);
                 break;
             }
             case id_custom_get_value: {
-                via_custom_get_value(value_id_and_data);
+                backlight_custom_get_value(value_id_and_data);
                 break;
             }
             case id_custom_save: {
