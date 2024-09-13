@@ -6,5 +6,6 @@ typedef enum {
     id_backlight_brightness   = 1,
     id_backlight_effect       = 2,
     id_backlight_effect_speed = 3,
-    id_backlight_color        = 4
+    id_backlight_color        = 4,
+    id_backight_color_2       = 5
 } via_backlight_value;
