@@ -9,13 +9,13 @@ void eeconfig_init_kb(void) {  // EEPROM is getting reset!
 
 #ifdef OLED_ENABLE
 // Used to draw on to the oled screen
-bool oled_task_user(void) {
+bool oled_task_kb(void) {
     app_draw();
     return false;
 }
 
 // Display seems to be a 64x128 mounted horizontally.
-oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+oled_rotation_t oled_init_kb(oled_rotation_t rotation) {
     return OLED_ROTATION_90;
 }
 #endif
