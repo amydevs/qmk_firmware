@@ -10,6 +10,8 @@
         "**/*.uf2": true
     },
     "files.associations": {
+        "**/frontmatter.json": "jsonc",
+        "**/.frontmatter/config/*.json": "jsonc",
         "*.h": "c",
         "*.c": "c",
         "*.inc": "c",
@@ -18,7 +20,19 @@
         "xstddef": "c",
         "type_traits": "c",
         "utility": "c",
-        "ranges": "c"
+        "ranges": "c",
+        "charconv": "c",
+        "chrono": "c",
+        "optional": "c",
+        "format": "c",
+        "ratio": "c",
+        "system_error": "c",
+        "array": "c",
+        "functional": "c",
+        "tuple": "c",
+        "string": "c",
+        "string_view": "c",
+        "span": "c"
     },
     "[markdown]": {
         "editor.trimAutoWhitespace": false,

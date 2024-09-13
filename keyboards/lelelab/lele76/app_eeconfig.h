@@ -33,11 +33,13 @@ typedef struct {
         uint8_t autooff;
     } side;
 
-    uint8_t homeart_id;
+    // uint8_t homeart_id;
 } app_eeconfig_t;
 
 extern app_eeconfig_t eecfg;
 
 bool app_eeconfig_load(void);
-void app_eeconfig_update(void);
+void app_eeconfig_save(void);
+void app_eeconfig_init(void);
+void app_eeconfig_side_effects_run(void);
 
