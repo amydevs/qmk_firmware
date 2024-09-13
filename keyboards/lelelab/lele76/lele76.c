@@ -5,12 +5,10 @@
 #include "timeout.h"
 #include "tiny_mcu.h"
 
-void eeconfig_init_kb(void) {  // EEPROM is getting reset!
-    app_eeconfig_init();
-}
-
 void keyboard_post_init_kb(void) {
-    app_eeconfig_load();
+    if (!app_eeconfig_load()) {
+        app_eeconfig_init();
+    }
     app_eeconfig_side_effects_run();
 }
 

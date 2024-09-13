@@ -49,6 +49,7 @@ void app_eeconfig_init(void) {
 }
 
 void app_eeconfig_task(void) {
+    if (is_tiny_busy()) return;
     switch (side_effect_run_progress) {
         case 1:
         {
@@ -58,43 +59,36 @@ void app_eeconfig_task(void) {
         }
         case 2:
         {
-            if (is_tiny_busy()) return;
             tiny85_i2c_tx_2b(CMD_RGB_eff, eecfg.rgb.mode);
             break;
         }
         case 3:
         {
-            if (is_tiny_busy()) return;
             tiny85_i2c_tx_2b(CMD_RGB_satu, eecfg.rgb.satu);
             break;
         }
         case 4:
         {
-            if (is_tiny_busy()) return;
             tiny85_i2c_tx_2b(CMD_RGB_bright, eecfg.rgb.bright);
             break;
         }
         case 5:
         {
-            if (is_tiny_busy()) return;
             tiny85_i2c_tx_2b(CMD_RGB_hue, eecfg.rgb.hue);
             break;
         }
         case 6:
         {
-            if (is_tiny_busy()) return;
             tiny85_i2c_tx_2b(CMD_RGB_hue2, eecfg.rgb.hue2);
             break;
         }
         case 7:
         {
-            if (is_tiny_busy()) return;
             tiny85_i2c_tx_2b(CMD_RGB_speed, 10+MAX_RGB_SPEED-eecfg.rgb.speed);
             break;
         }
         case 8:
         {
-            if (is_tiny_busy()) return;
             if (eecfg.side.mode <= SideLed_Mode_solid) {
                 const uint8_t side_effect_data[] = {CMD_SIDE_LED_EFFECT, eecfg.side.mode};
                 tiny85_i2c_tx(side_effect_data, sizeof(side_effect_data));
@@ -103,14 +97,12 @@ void app_eeconfig_task(void) {
         }
         case 9:
         {
-            if (is_tiny_busy()) return;
             const uint8_t side_bright_data[] = {CMD_SIDE_LED_BRIGHT, eecfg.side.bright};
             tiny85_i2c_tx(side_bright_data, sizeof(side_bright_data));
             break;
         }
         case 10:
         {
-            if (is_tiny_busy()) return;
             const uint8_t side_speed_data[] = {CMD_SIDE_LED_SPEED, eecfg.side.speed};
             tiny85_i2c_tx(side_speed_data, sizeof(side_speed_data));
             break;
