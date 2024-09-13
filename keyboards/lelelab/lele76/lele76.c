@@ -3,6 +3,7 @@
 #include "via_protocol.h"
 #include "app_eeconfig.h"
 #include "timeout.h"
+#include "tiny_mcu.h"
 
 void eeconfig_init_kb(void) {  // EEPROM is getting reset!
     app_eeconfig_init();
@@ -10,10 +11,13 @@ void eeconfig_init_kb(void) {  // EEPROM is getting reset!
 
 void keyboard_post_init_kb(void) {
     app_eeconfig_load();
+    app_eeconfig_side_effects_run();
 }
 
 void housekeeping_task_kb(void) {
-    timeout_task();
+    tinyrgb_task();
+    app_eeconfig_task();
+    // timeout_task();
 }
 
 void post_process_record_kb(uint16_t keycode, keyrecord_t *record) {

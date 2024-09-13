@@ -2,9 +2,9 @@
 #include "tiny_mcu.h"
 #include "tiny_mcu_protocol.h"
 #include "app_eeconfig.h"
-#include <stdio.h>
 
 app_eeconfig_t eecfg;
+static uint8_t side_effect_run_progress = 0;
 
 bool app_eeconfig_load(void) {
     // check magicbyte
@@ -17,12 +17,10 @@ bool app_eeconfig_load(void) {
         *buf = eeprom_read_byte((uint8_t*) (i + APP_EECONFIG_ADDR_START));
         buf++;
     }
-    app_eeconfig_side_effects_run();
     return true;
 }
 
 void app_eeconfig_save(void) {
-    app_eeconfig_side_effects_run();
     uint8_t *src = (uint8_t*) &eecfg;
     for (int i=0;i<sizeof(app_eeconfig_t);i++) {
         eeprom_update_byte((uint8_t*)(i + APP_EECONFIG_ADDR_START), *src);
@@ -48,26 +46,67 @@ void app_eeconfig_init(void) {
     eecfg.side.bright = MAX_SIDE_LED_BRIGHT;
     eecfg.side.speed = MAX_SIDE_LED_SPEED;
     eecfg.side.autooff = 0;
-    app_eeconfig_save();
+}
+
+void app_eeconfig_task(void) {
+    switch (side_effect_run_progress) {
+        case 1:
+        {
+            oled_set_brightness(eecfg.oled.bright);
+            oled_invert(eecfg.oled.invert);
+            break;
+        }
+        case 2:
+        {
+            if (is_tiny_busy()) return;
+            tiny85_i2c_tx_2b(CMD_RGB_eff, RGB_Mode_solid);
+            break;
+        }
+        // case 3:
+        //     if (is_tiny_busy()) return;
+        //     tiny85_i2c_tx_2b(CMD_RGB_satu, eecfg.rgb.satu);
+        //     break;
+        // case 4:
+        //     if (is_tiny_busy()) return;
+        //     tiny85_i2c_tx_2b(CMD_RGB_bright, eecfg.rgb.bright);
+        //     break;
+        // case 5:
+        //     if (is_tiny_busy()) return;
+        //     tiny85_i2c_tx_2b(CMD_RGB_hue, eecfg.rgb.hue);
+        //     break;
+        // case 6:
+        //     if (is_tiny_busy()) return;
+        //     tiny85_i2c_tx_2b(CMD_RGB_hue2, eecfg.rgb.hue2);
+        //     break;
+        // case 7:
+        //     if (is_tiny_busy()) return;
+        //     tiny85_i2c_tx_2b(CMD_RGB_speed, 10+MAX_RGB_SPEED-eecfg.rgb.speed);
+        //     break;
+        // case 8:
+        //     if (is_tiny_busy()) return;
+        //     if (eecfg.side.mode <= SideLed_Mode_solid) {
+        //         const uint8_t side_effect_data[] = {CMD_SIDE_LED_EFFECT, eecfg.side.mode};
+        //         tiny85_i2c_tx(side_effect_data, sizeof(side_effect_data));
+        //     }
+        //     break;
+        // case 9:
+        //     if (is_tiny_busy()) return;
+        //     const uint8_t side_bright_data[] = {CMD_SIDE_LED_BRIGHT, eecfg.side.bright};
+        //     tiny85_i2c_tx(side_bright_data, sizeof(side_bright_data));
+        //     break;
+        // case 10:
+        //     if (is_tiny_busy()) return;
+        //     const uint8_t side_speed_data[] = {CMD_SIDE_LED_SPEED, eecfg.side.speed};
+        //     tiny85_i2c_tx(side_speed_data, sizeof(side_speed_data));
+        //     break;
+        default:
+        {
+            return;
+        }
+    }
+    side_effect_run_progress++;
 }
 
 void app_eeconfig_side_effects_run(void) {
-    oled_set_brightness(eecfg.oled.bright);
-    oled_invert(eecfg.oled.invert);
-    tiny85_i2c_tx_2b(CMD_RGB_satu, eecfg.rgb.satu);
-    tiny85_i2c_tx_2b(CMD_RGB_eff, eecfg.rgb.mode);
-    tiny85_i2c_tx_2b(CMD_RGB_bright, eecfg.rgb.bright);
-    tiny85_i2c_tx_2b(CMD_RGB_hue, eecfg.rgb.hue);
-    tiny85_i2c_tx_2b(CMD_RGB_hue2, eecfg.rgb.hue2);
-    tiny85_i2c_tx_2b(CMD_RGB_satu, eecfg.rgb.satu);
-    tiny85_i2c_tx_2b(CMD_RGB_speed, 10+MAX_RGB_SPEED-eecfg.rgb.speed);
-
-    if (eecfg.side.mode <= SideLed_Mode_solid) {
-        const uint8_t side_effect_data[] = {CMD_SIDE_LED_EFFECT, eecfg.side.mode};
-        tiny85_i2c_tx(side_effect_data, sizeof(side_effect_data));
-    }
-    const uint8_t side_bright_data[] = {CMD_SIDE_LED_BRIGHT, eecfg.side.bright};
-    tiny85_i2c_tx(side_bright_data, sizeof(side_bright_data));
-    const uint8_t side_speed_data[] = {CMD_SIDE_LED_SPEED, eecfg.side.speed};
-    tiny85_i2c_tx(side_speed_data, sizeof(side_speed_data));
+    side_effect_run_progress = 1;
 }

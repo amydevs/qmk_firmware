@@ -42,4 +42,5 @@ bool app_eeconfig_load(void);
 void app_eeconfig_save(void);
 void app_eeconfig_init(void);
 void app_eeconfig_side_effects_run(void);
+void app_eeconfig_task(void);
 
