@@ -1,5 +1,5 @@
 #include QMK_KEYBOARD_H
-#include "app_eeconfig.h"
+#include "eecfg.h"
 #include "tiny_mcu.h"
 #include "tiny_mcu_protocol.h"
 
