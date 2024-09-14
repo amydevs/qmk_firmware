@@ -4,6 +4,7 @@
 #include "eecfg.h"
 #include "timeout.h"
 #include "tiny_mcu.h"
+#include "tiny_mcu_protocol.h"
 
 void keyboard_post_init_kb(void) {
     if (!eecfg_load()) {
@@ -18,8 +19,29 @@ void housekeeping_task_kb(void) {
     timeout_task();
 }
 
+static uint8_t get_led_id(uint8_t row, uint8_t col) {
+    uint8_t ans;
+    if (row == 0 && col == 0) return 0xff;
+    if (col == 0) row--;
+    ans = 16*row;
+    if ((row & 1) == 0) { // odd rows
+        ans += (0xf-col);
+    }
+    else {
+        ans += col;
+    }
+    return ans;
+}
+
 void post_process_record_kb(uint16_t keycode, keyrecord_t *record) {
-  if (record->event.pressed) refresh_timeout();
+    if (record->event.pressed) {
+        refresh_timeout();
+        uint8_t led_id = get_led_id(
+            record->event.key.row,
+            record->event.key.col
+        );
+        tiny85_i2c_tx_2b(CMD_RGB_keypress, led_id);
+    }
 }
 
 void post_encoder_update_kb(uint8_t index, bool clockwise) {
