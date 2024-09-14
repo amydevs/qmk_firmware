@@ -29,6 +29,9 @@ void post_encoder_update_kb(uint8_t index, bool clockwise) {
 #ifdef OLED_ENABLE
 // Used to draw on to the oled screen
 bool oled_task_kb(void) {
+    if (is_oled_timeout) {
+        return false;
+    }
     app_draw();
     return false;
 }

@@ -37,8 +37,19 @@ static void handle_oled_wakeup(void) {
 }
 
 void timeout_task(void) {
+    int32_t elapsed = timer_elapsed(key_timer);
+    if (eecfg.oled.autooff != 0) {
+        if (!is_oled_timeout && elapsed > eecfg.oled.autooff * 1000) {
+            handle_oled_suspend();
+            is_oled_timeout = true;
+        }
+    }
+    else if (is_oled_timeout) {
+        handle_oled_wakeup();
+        is_oled_timeout = false;
+    }
     if (eecfg.rgb.autooff != 0) {
-        if (!is_led_timeout && timer_elapsed(key_timer) > eecfg.rgb.autooff * 1000 && !is_tiny_busy()) {
+        if (!is_led_timeout && elapsed > eecfg.rgb.autooff * 1000 && !is_tiny_busy()) {
             handle_led_suspend();
             is_led_timeout = true;
         }
@@ -48,7 +59,7 @@ void timeout_task(void) {
         is_led_timeout = false;
     }
     if (eecfg.side.autooff != 0) {
-        if (!is_side_led_timeout && timer_elapsed(key_timer) > eecfg.side.autooff * 1000 && !is_tiny_busy()) {
+        if (!is_side_led_timeout && elapsed > eecfg.side.autooff * 1000 && !is_tiny_busy()) {
             handle_side_led_suspend();
             is_side_led_timeout = true;
         }
@@ -57,20 +68,14 @@ void timeout_task(void) {
         handle_side_led_wakeup();
         is_side_led_timeout = false;
     }
-    if (eecfg.oled.autooff != 0) {
-        if (!is_oled_timeout && timer_elapsed(key_timer) > eecfg.oled.autooff * 1000) {
-            handle_oled_suspend();
-            is_oled_timeout = true;
-        }
-    }
-    else if (is_oled_timeout) {
-        handle_oled_wakeup();
-        is_oled_timeout = false;
-    }
 }
 
 void refresh_timeout(void) {
     key_timer = timer_read32();
+    if (is_oled_timeout) {
+        is_oled_timeout = false;
+        handle_oled_wakeup();
+    }
     if (is_led_timeout) {
         is_led_timeout = false;
         handle_led_wakeup();
@@ -78,9 +83,5 @@ void refresh_timeout(void) {
     if (is_side_led_timeout) {
         is_side_led_timeout = false;
         handle_side_led_wakeup();
-    }
-    if (is_oled_timeout) {
-        is_oled_timeout = false;
-        handle_oled_wakeup();
     }
 }
