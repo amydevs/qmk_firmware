@@ -49,65 +49,105 @@ void app_eeconfig_init(void) {
     eecfg.side.autooff = 0;
 }
 
+void app_eeconfig_oled_side_effect(void) {
+    oled_set_brightness(eecfg.oled.bright);
+    oled_invert(eecfg.oled.invert);
+}
+
+void app_eeconfig_rgb_mode_side_effect(void) {
+    if (!is_led_timeout) tiny85_i2c_tx_2b(CMD_RGB_eff, eecfg.rgb.mode);
+}
+
+void app_eeconfig_rgb_satu_side_effect(void) {
+    tiny85_i2c_tx_2b(CMD_RGB_satu, eecfg.rgb.satu);
+}
+
+void app_eeconfig_rgb_bright_side_effect(void) {
+    tiny85_i2c_tx_2b(CMD_RGB_bright, eecfg.rgb.bright);
+}
+
+void app_eeconfig_rgb_hue_side_effect(void) {
+    tiny85_i2c_tx_2b(CMD_RGB_hue, eecfg.rgb.hue);
+}
+
+void app_eeconfig_rgb_hue2_side_effect(void) {
+    tiny85_i2c_tx_2b(CMD_RGB_hue2, eecfg.rgb.hue2);
+}
+
+void app_eeconfig_rgb_speed_side_effect(void) {
+    tiny85_i2c_tx_2b(CMD_RGB_speed, 10+MAX_RGB_SPEED-eecfg.rgb.speed);
+}
+
+void app_eeconfig_side_mode_side_effect(void) {
+    if (!is_side_led_timeout && eecfg.side.mode <= SideLed_Mode_solid) {
+        const uint8_t side_effect_data[] = {CMD_SIDE_LED_EFFECT, eecfg.side.mode};
+        tiny85_i2c_tx(side_effect_data, sizeof(side_effect_data));
+    }
+}
+
+void app_eeconfig_side_bright_side_effect(void) {
+    const uint8_t side_bright_data[] = {CMD_SIDE_LED_BRIGHT, eecfg.side.bright};
+    tiny85_i2c_tx(side_bright_data, sizeof(side_bright_data));
+}
+
+void app_eeconfig_side_speed_side_effect(void) {
+    const uint8_t side_speed_data[] = {CMD_SIDE_LED_SPEED, eecfg.side.speed};
+    tiny85_i2c_tx(side_speed_data, sizeof(side_speed_data));
+}
+
 void app_eeconfig_task(void) {
     if (is_tiny_busy()) return;
     switch (side_effect_run_progress) {
         case 1:
         {
-            oled_set_brightness(eecfg.oled.bright);
-            oled_invert(eecfg.oled.invert);
+            app_eeconfig_oled_side_effect();
             break;
         }
         case 2:
         {
-            if (!is_led_timeout) tiny85_i2c_tx_2b(CMD_RGB_eff, eecfg.rgb.mode);
+            app_eeconfig_rgb_mode_side_effect();
             break;
         }
         case 3:
         {
-            tiny85_i2c_tx_2b(CMD_RGB_satu, eecfg.rgb.satu);
+            app_eeconfig_rgb_satu_side_effect();
             break;
         }
         case 4:
         {
-            tiny85_i2c_tx_2b(CMD_RGB_bright, eecfg.rgb.bright);
+            app_eeconfig_rgb_bright_side_effect();
             break;
         }
         case 5:
         {
-            tiny85_i2c_tx_2b(CMD_RGB_hue, eecfg.rgb.hue);
+            app_eeconfig_rgb_hue_side_effect();
             break;
         }
         case 6:
         {
+            app_eeconfig_rgb_hue2_side_effect();
             tiny85_i2c_tx_2b(CMD_RGB_hue2, eecfg.rgb.hue2);
             break;
         }
         case 7:
         {
+            app_eeconfig_rgb_speed_side_effect();
             tiny85_i2c_tx_2b(CMD_RGB_speed, 10+MAX_RGB_SPEED-eecfg.rgb.speed);
             break;
         }
         case 8:
         {
-            if (!is_side_led_timeout) {
-                if (eecfg.side.mode <= SideLed_Mode_solid) {
-                    const uint8_t side_effect_data[] = {CMD_SIDE_LED_EFFECT, eecfg.side.mode};
-                    tiny85_i2c_tx(side_effect_data, sizeof(side_effect_data));
-                }
-            }
+            app_eeconfig_side_mode_side_effect();
             break;
         }
         case 9:
         {
-            const uint8_t side_bright_data[] = {CMD_SIDE_LED_BRIGHT, eecfg.side.bright};
-            tiny85_i2c_tx(side_bright_data, sizeof(side_bright_data));
+            app_eeconfig_side_bright_side_effect();
             break;
         }
         case 10:
         {
-            const uint8_t side_speed_data[] = {CMD_SIDE_LED_SPEED, eecfg.side.speed};
-            tiny85_i2c_tx(side_speed_data, sizeof(side_speed_data));
+            app_eeconfig_side_speed_side_effect();
             break;
         }
         default:
@@ -118,6 +158,6 @@ void app_eeconfig_task(void) {
     side_effect_run_progress++;
 }
 
-void app_eeconfig_side_effects_run(void) {
+void app_eeconfig_all_side_effects_schedule(void) {
     side_effect_run_progress = 1;
 }
