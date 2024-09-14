@@ -96,7 +96,6 @@ void eecfg_side_speed_side_effect(void) {
 }
 
 void eecfg_task(void) {
-    if (is_tiny_busy()) return;
     switch (side_effect_run_progress) {
         case 1:
         {
@@ -105,53 +104,63 @@ void eecfg_task(void) {
         }
         case 2:
         {
+            if (is_tiny_busy()) return;
             eecfg_rgb_mode_side_effect();
             break;
         }
         case 3:
         {
+            if (is_tiny_busy()) return;
             eecfg_rgb_satu_side_effect();
             break;
         }
         case 4:
         {
+            if (is_tiny_busy()) return;
             eecfg_rgb_bright_side_effect();
             break;
         }
         case 5:
         {
+            if (is_tiny_busy()) return;
             eecfg_rgb_hue_side_effect();
             break;
         }
         case 6:
         {
+            if (is_tiny_busy()) return;
             eecfg_rgb_hue2_side_effect();
             tiny85_i2c_tx_2b(CMD_RGB_hue2, eecfg.rgb.hue2);
             break;
         }
         case 7:
         {
+            if (is_tiny_busy()) return;
             eecfg_rgb_speed_side_effect();
             tiny85_i2c_tx_2b(CMD_RGB_speed, 10+MAX_RGB_SPEED-eecfg.rgb.speed);
             break;
         }
         case 8:
         {
+            if (is_tiny_busy()) return;
             eecfg_side_mode_side_effect();
             break;
         }
         case 9:
         {
+            if (is_tiny_busy()) return;
             eecfg_side_bright_side_effect();
             break;
         }
         case 10:
         {
+            if (is_tiny_busy()) return;
             eecfg_side_speed_side_effect();
             break;
         }
         default:
         {
+            side_effect_run_progress = 0;
             return;
         }
     }
