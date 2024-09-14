@@ -1,20 +1,20 @@
 #include QMK_KEYBOARD_H
-#include "screen_app.h"
+#include "oled.h"
 #include "via_protocol.h"
-#include "app_eeconfig.h"
+#include "eecfg.h"
 #include "timeout.h"
 #include "tiny_mcu.h"
 
 void keyboard_post_init_kb(void) {
-    if (!app_eeconfig_load()) {
-        app_eeconfig_init();
+    if (!eecfg_load()) {
+        eecfg_init();
     }
-    app_eeconfig_all_side_effects_schedule();
+    eecfg_all_side_effects_schedule();
 }
 
 void housekeeping_task_kb(void) {
     tinyrgb_task();
-    app_eeconfig_task();
+    eecfg_task();
     timeout_task();
 }
 
@@ -48,32 +48,32 @@ static void backlight_custom_set_value(uint8_t *data) {
     switch (*value_id) {
         case id_backlight_brightness: {
             eecfg.rgb.bright = *value_data;
-            app_eeconfig_rgb_bright_side_effect();
+            eecfg_rgb_bright_side_effect();
             break;
         }
         case id_backlight_effect: {
             eecfg.rgb.mode = *value_data;
-            app_eeconfig_rgb_mode_side_effect();
+            eecfg_rgb_mode_side_effect();
             break;
         }
         case id_backlight_effect_speed: {
             eecfg.rgb.speed = *value_data;
-            app_eeconfig_rgb_speed_side_effect();
+            eecfg_rgb_speed_side_effect();
             break;
         }
         case id_backlight_hue: {
             eecfg.rgb.hue = *value_data;
-            app_eeconfig_rgb_hue_side_effect();
+            eecfg_rgb_hue_side_effect();
             break;
         }
         case id_backlight_hue2: {
             eecfg.rgb.hue2 = *value_data;
-            app_eeconfig_rgb_hue2_side_effect();
+            eecfg_rgb_hue2_side_effect();
             break;
         }
         case id_backlight_saturation: {
             eecfg.rgb.satu = *value_data;
-            app_eeconfig_rgb_satu_side_effect();
+            eecfg_rgb_satu_side_effect();
             break;
         }
         case id_backlight_timeout: {
@@ -82,16 +82,16 @@ static void backlight_custom_set_value(uint8_t *data) {
         }
         case id_underglow_brightness: {
             eecfg.side.bright = *value_data;
-            app_eeconfig_side_bright_side_effect();
+            eecfg_side_bright_side_effect();
         }
         case id_underglow_effect: {
             eecfg.side.mode = *value_data;
-            app_eeconfig_side_mode_side_effect();
+            eecfg_side_mode_side_effect();
             break;
         }
         case id_underglow_effect_speed: {
             eecfg.side.speed = *value_data;
-            app_eeconfig_side_speed_side_effect();
+            eecfg_side_speed_side_effect();
             break;
         }
         case id_underglow_timeout: {
@@ -100,12 +100,12 @@ static void backlight_custom_set_value(uint8_t *data) {
         }
         case id_oled_brightness: {
             eecfg.oled.bright = *value_data;
-            app_eeconfig_oled_side_effect();
+            eecfg_oled_side_effect();
             break;
         }
         case id_oled_invert: {
             eecfg.oled.invert = *value_data;
-            app_eeconfig_oled_side_effect();
+            eecfg_oled_side_effect();
             break;
         }
         case id_oled_timeout: {
@@ -113,7 +113,7 @@ static void backlight_custom_set_value(uint8_t *data) {
             break;
         }
     }
-    app_eeconfig_save();
+    eecfg_save();
 }
 
 

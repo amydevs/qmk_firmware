@@ -1,5 +1,5 @@
 #include QMK_KEYBOARD_H
-#include "screen_app.h"
+#include "oled.h"
 #include <stdio.h>
 char wpm_str[10];
 
