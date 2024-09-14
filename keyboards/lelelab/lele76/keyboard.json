@@ -5,13 +5,10 @@
     "bootloader": "usbasploader",
     "diode_direction": "COL2ROW",
     "features": {
-        "rgblight": false,
-        "backlight": false,
-        "rgb_matrix": false,
-        "led_matrix": false,
-        "encoder": true,
         "wpm": true,
-        "oled": true
+        "oled": true,
+        "encoder": true,
+        "bootmagic": true
     },
     "matrix_pins": {
         "cols": ["B0", "B1", "B2", "B3", "B4", "A5", "A6", "A7", "C7", "C6", "C5", "C4", "C3", "C2", "D7", "D4"],
@@ -20,6 +17,10 @@
     "encoder": {
         "enabled": true,
         "rotary": [{ "pin_a": "B6", "pin_b": "B5", "resolution": 4 }]
+    },
+    "bootmagic": {
+        "enabled": true,
+        "matrix": [0, 0]
     },
     "processor": "atmega32a",
     "url": "",
