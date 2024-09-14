@@ -47,25 +47,23 @@ void timeout_task(void) {
         handle_led_wakeup();
         is_led_timeout = false;
     }
-
     if (eecfg.side.autooff != 0) {
-        if (!is_side_led_timeout && timer_elapsed(key_timer) > eecfg.side.autooff * 1000) {
+        if (!is_side_led_timeout && timer_elapsed(key_timer) > eecfg.side.autooff * 1000 && !is_tiny_busy()) {
             handle_side_led_suspend();
             is_side_led_timeout = true;
         }
     }
-    else if (is_side_led_timeout) {
+    else if (is_side_led_timeout && !is_tiny_busy()) {
         handle_side_led_wakeup();
         is_side_led_timeout = false;
     }
-
     if (eecfg.oled.autooff != 0) {
-        if (!is_oled_timeout && timer_elapsed(key_timer) > eecfg.oled.autooff * 1000) {
+        if (!is_oled_timeout && timer_elapsed(key_timer) > eecfg.oled.autooff * 1000 && !is_tiny_busy()) {
             handle_oled_suspend();
             is_oled_timeout = true;
         }
     }
-    else if (is_oled_timeout) {
+    else if (is_oled_timeout && !is_tiny_busy()) {
         handle_oled_wakeup();
         is_oled_timeout = false;
     }
