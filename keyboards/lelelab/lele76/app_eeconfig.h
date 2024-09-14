@@ -41,6 +41,15 @@ extern app_eeconfig_t eecfg;
 bool app_eeconfig_load(void);
 void app_eeconfig_save(void);
 void app_eeconfig_init(void);
-void app_eeconfig_side_effects_run(void);
+void app_eeconfig_oled_side_effect(void);
+void app_eeconfig_rgb_mode_side_effect(void);
+void app_eeconfig_rgb_satu_side_effect(void);
+void app_eeconfig_rgb_bright_side_effect(void);
+void app_eeconfig_rgb_hue_side_effect(void);
+void app_eeconfig_rgb_hue2_side_effect(void);
+void app_eeconfig_rgb_speed_side_effect(void);
+void app_eeconfig_side_mode_side_effect(void);
+void app_eeconfig_side_bright_side_effect(void);
+void app_eeconfig_side_speed_side_effect(void);
 void app_eeconfig_task(void);
-
+void app_eeconfig_all_side_effects_schedule(void);
